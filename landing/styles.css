@@ -167,7 +167,7 @@ h1, h2, h3, h4 {
 /* Display — usado en hero H1 con dos líneas */
 .display {
   font-family: var(--f-serif);
-  font-size: clamp(28px, 3.5vw, 48px);
+  font-size: clamp(38px, 10vw, 52px);
   font-weight: 400;
   line-height: 1.08;
   letter-spacing: -0.025em;
@@ -175,13 +175,13 @@ h1, h2, h3, h4 {
 
 @media (min-width: 768px) {
   .display {
-    font-size: clamp(36px, 3.8vw, 58px);
+    font-size: clamp(52px, 6vw, 72px);
   }
 }
 
 @media (min-width: 1440px) {
   .display {
-    font-size: 64px;
+    font-size: 80px;
   }
 }
 
@@ -278,7 +278,7 @@ h1, h2, h3, h4 {
 
 /* Sección base */
 .section {
-  padding-block: 80px;
+  padding-block: 56px;
 }
 
 @media (min-width: 768px) {
@@ -601,7 +601,7 @@ h1, h2, h3, h4 {
   visibility: visible;
 }
 
-.mmenu a {
+.mmenu a:not(.btn) {
   font-family: var(--f-serif);
   font-size: 32px;
   font-weight: 400;
@@ -813,11 +813,20 @@ h1, h2, h3, h4 {
   position: absolute;
   inset: 0;
   opacity: 0;
-  transition: opacity 0.8s ease;
+  transform: translateX(100%);
+  transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
+  will-change: transform;
 }
 
 .manifesto__slide.is-active {
   opacity: 1;
+  transform: translateX(0);
+}
+
+/* Salida hacia la izquierda (navegar hacia adelante) */
+.manifesto__slide.exit-left {
+  transform: translateX(-100%);
+  opacity: 0;
 }
 
 .manifesto__slide img {
@@ -885,7 +894,7 @@ h1, h2, h3, h4 {
   }
 
   .manifesto__slider {
-    min-height: 280px;
+    min-height: 320px;
   }
 
   .manifesto__body {
@@ -1395,6 +1404,7 @@ h1, h2, h3, h4 {
   margin-top: clamp(56px, 7vw, 96px);
   padding-top: clamp(40px, 5vw, 64px);
   border-top: 1px solid var(--line);
+  overflow-x: auto;
 }
 
 .master__head {
@@ -1412,7 +1422,7 @@ h1, h2, h3, h4 {
 
 .master__filters {
   display: flex;
-  gap: 8px;
+  gap: 6px;
   flex-wrap: wrap;
 }
 
@@ -1421,19 +1431,23 @@ h1, h2, h3, h4 {
 }
 
 .mfilter {
-  padding: 8px 16px;
+  padding: 11px 20px;
   border-radius: 999px;
   border: 1px solid var(--line);
-  font-family: var(--f-mono);
-  font-size: 11px;
-  color: var(--ink-muted);
+  font-family: var(--f-sans);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--ink-soft);
   background: var(--paper);
   cursor: pointer;
   transition: 0.2s;
 }
 
 .mfilter:hover {
-  border-color: var(--ink-2);
+  border-color: var(--ink);
   color: var(--ink);
 }
 
@@ -2567,7 +2581,7 @@ h1, h2, h3, h4 {
   }
 
   .tgal__thumbs {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
   }
 
   .footer__top {
@@ -2757,6 +2771,180 @@ h1, h2, h3, h4 {
   background: linear-gradient(to right, var(--orange) 55%, rgba(255, 255, 255, 0.2) 55%);
 }
 
+/* Spans full/abbr — desktop muestra full, mobile muestra abbr */
+.htl-label__abbr { display: none; }
+.htl-label__full { display: inline; }
+
+/* Timeline responsive — mobile */
+@media (max-width: 767px) {
+  .hero__timeline {
+    max-width: 100%;
+  }
+
+  .htl-label__full { display: none; }
+  .htl-label__abbr { display: inline; }
+
+  /* Filtros master — scroll horizontal, misma lógica que tipos__tabs */
+  .master__filters {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 4px;
+  }
+
+  .master__filters::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Formulario contacto — evitar overflow horizontal */
+  #contacto .wrap {
+    overflow: hidden;
+  }
+
+  .ctaf__grid > * {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .form {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* CTAs asesor full-width */
+  .asesor .btn-row {
+    flex-direction: column;
+  }
+
+  .asesor .btn-row .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* CTAs dúplex full-width */
+  .duplex__cta {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .duplex__cta .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* CTAs de tipología full-width */
+  .ficha .btn-row {
+    flex-direction: column;
+  }
+
+  .ficha .btn-row .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Tabs tipologías — scroll horizontal, una sola fila */
+  .tipos__tabs {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;       /* Firefox */
+    padding-bottom: 4px;
+    gap: 8px;
+  }
+
+  .tipos__tabs::-webkit-scrollbar {
+    display: none;               /* Chrome / Safari */
+  }
+
+  /* CTAs hero full-width */
+  .hero__ctas {
+    flex-direction: column;
+  }
+
+  .hero__ctas .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Scroll indicator — oculto en mobile */
+  .hero__scroll {
+    display: none;
+  }
+
+  /* Párrafos estandarizados en mobile — 16px / 1.65 */
+  body {
+    font-size: 16px;
+    line-height: 1.65;
+  }
+
+  .lede {
+    font-size: 16px;
+    line-height: 1.65;
+  }
+
+  .hero__sub {
+    font-size: 16px;
+    line-height: 1.65;
+  }
+
+  /* Interlineado estandarizado 1.65 en mobile */
+  .manifesto p,
+  .asesor__quote,
+  .faq__a p {
+    line-height: 1.65;
+  }
+
+  /* Jerarquía de headings en mobile — tamaño + interlineado */
+  .display {
+    line-height: 1.12;
+  }
+
+  .h1 {
+    font-size: 30px;
+    line-height: 1.25;
+  }
+
+  .h2 {
+    font-size: 24px;
+    line-height: 1.28;
+  }
+
+  .h3 {
+    line-height: 1.32;
+  }
+
+  h1, h2, h3, h4 {
+    line-height: 1.2;
+  }
+
+  /* Logo DIGA — padding reducido en mobile */
+  .diga__logo {
+    padding: 24px;
+  }
+
+  /* Eyebrow — línea arriba, texto abajo en mobile */
+  .eyebrow {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 14px;
+    letter-spacing: 0.15em;
+  }
+
+  .eyebrow::before {
+    width: 24px;
+    height: 2px;
+  }
+
+  /* Eyebrow centrado (FAQ) — mantiene centrado */
+  .shead.center .eyebrow {
+    align-items: center;
+  }
+}
+
 /* Barra de destacados */
 .hero-stats {
   background: var(--ink-2);
@@ -2830,7 +3018,7 @@ h1, h2, h3, h4 {
   }
 
   .hero-stats__item {
-    padding-inline: 16px;
+    padding: 20px 16px;
   }
 
   .hero-stats__item:nth-child(odd) {
@@ -2840,15 +3028,29 @@ h1, h2, h3, h4 {
   .hero-stats__item:nth-child(even) {
     border-right: none;
     padding-right: 0;
+    padding-left: 16px; /* resetea el padding-left: 0 heredado del breakpoint tablet */
   }
 
   .hero-stats__item:nth-child(3) {
-    border-right: 1px solid rgba(255, 255, 255, 0.08);
+    border-right: 1px solid rgba(255, 255, 255, 0.12);
   }
 
+  /* Item 5 — centrado, ancho completo, separador arriba */
   .hero-stats__item:nth-child(5) {
     grid-column: 1 / -1;
     border-right: none;
-    padding-left: 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    padding-inline: 0;
+    text-align: center;
+  }
+
+  /* Reducir tamaño de valor para evitar wrapping en celdas angostas */
+  .hero-stats__val {
+    font-size: 15px;
+  }
+
+  .hero-stats__lbl {
+    font-size: 10px;
+    margin-bottom: 6px;
   }
 }

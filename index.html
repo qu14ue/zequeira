@@ -124,22 +124,34 @@
             <div class="hero__timeline-track">
               <div class="htl-step htl-step--done">
                 <div class="htl-dot" aria-hidden="true"></div>
-                <span class="htl-label">Estructura</span>
+                <span class="htl-label">
+                  <span class="htl-label__full">Estructura</span>
+                  <span class="htl-label__abbr">Est.</span>
+                </span>
               </div>
               <div class="htl-line htl-line--done" aria-hidden="true"></div>
               <div class="htl-step htl-step--done">
                 <div class="htl-dot" aria-hidden="true"></div>
-                <span class="htl-label">Albañilería</span>
+                <span class="htl-label">
+                  <span class="htl-label__full">Albañilería</span>
+                  <span class="htl-label__abbr">Alb.</span>
+                </span>
               </div>
               <div class="htl-line htl-line--done" aria-hidden="true"></div>
               <div class="htl-step htl-step--done">
                 <div class="htl-dot" aria-hidden="true"></div>
-                <span class="htl-label">Instalaciones</span>
+                <span class="htl-label">
+                  <span class="htl-label__full">Instalaciones</span>
+                  <span class="htl-label__abbr">Inst.</span>
+                </span>
               </div>
               <div class="htl-line htl-line--active" aria-hidden="true"></div>
               <div class="htl-step htl-step--active">
                 <div class="htl-dot" aria-hidden="true"></div>
-                <span class="htl-label">Terminaciones<br><strong>Avance de Obra: 90%</strong></span>
+                <span class="htl-label">
+                  <span class="htl-label__full">Terminaciones<br><strong>Avance de Obra: 90%</strong></span>
+                  <span class="htl-label__abbr">Term.<br><strong>90%</strong></span>
+                </span>
               </div>
             </div>
           </div>
@@ -242,7 +254,7 @@
       <div class="wrap">
         <div class="shead reveal">
           <span class="eyebrow">Capítulo 1 · Barrio Naón</span>
-          <h2 class="h1">El oasis que la ciudad<br>no sabe que tiene.</h2>
+          <h2 class="h1">Un oasis en la ciudad</h2>
         </div>
         <div class="barrio__grid">
 
@@ -338,7 +350,7 @@
         </div>
         <div class="band__body">
           <span class="eyebrow">Calidad de construcción</span>
-          <h2 class="h2">Terminaciones que no piden disculpas.</h2>
+          <h2 class="h2">Terminaciones que marcan la diferencia</h2>
           <p class="lede muted">
             Porcelanato, doble vidrio termoacústico, grifería línea negra, aire acondicionado en cada ambiente, cocina con muebles a medida y placards completos — incluido en todas las unidades, sin excepción.
           </p>
@@ -359,7 +371,7 @@
         </div>
         <div class="band__body">
           <span class="eyebrow eyebrow--light">Privacidad</span>
-          <h2 class="h2">Solo dos por piso. El piso es tuyo.</h2>
+          <h2 class="h2">Semipisos exclusivos. Privacidad y tranquilidad</h2>
           <p class="lede">
             Solo dos unidades por piso significa que el palier es tuyo, no un corredor compartido con seis vecinos. Cada semipiso ocupa el ancho completo de la planta, con orientación propia y balcón exclusivo.
           </p>
@@ -385,8 +397,10 @@
             unidades con su precio, para comparar.
           </p>
         </div>
-        <div class="tipos__tabs" id="tipoTabs" role="tablist"></div>
-        <div id="tipoPanels"></div>
+        <div class="tipos__contenido">
+          <div class="tipos__tabs" id="tipoTabs" role="tablist"></div>
+          <div id="tipoPanels"></div>
+        </div>
 
         <!-- Tabla maestra de disponibilidad -->
         <div class="master reveal" id="disponibilidad">
@@ -787,7 +801,7 @@
           </div>
           <div class="reveal d1">
             <span class="eyebrow">El equipo detrás de Zequeira 7054</span>
-            <h3 class="h2 diga__title">Construido por quien también lo diseña.</h3>
+            <h3 class="h2 diga__title">Construido por quien lo diseña.</h3>
             <p class="lede muted">
               DIGA Desarrollos Inmobiliarios diseña, construye y entrega sus propios proyectos en
               Liniers y zona oeste. Con varios emprendimientos terminados y entregados en el barrio,
@@ -1017,23 +1031,79 @@
   <script src="landing/app.js" defer></script>
 
   <script>
-    // Manifesto slideshow
+    // Manifesto slideshow con slide direction
     (function () {
       const slides = document.querySelectorAll('.manifesto__slide');
       const dots   = document.querySelectorAll('.mdot');
-      if (!slides.length) return;
+      const el     = document.querySelector('.manifesto__slider');
+      if (!slides.length || !el) return;
 
-      let current = 0;
+      let current   = 0;
+      let timer;
+      let animating = false;
 
-      function goTo(n) {
-        slides[current].classList.remove('is-active');
-        dots[current].classList.remove('is-active');
-        current = (n + slides.length) % slides.length;
-        slides[current].classList.add('is-active');
+      function goTo(n, dir = 1) {
+        if (animating) return;
+        const prevIdx = current;
+        const nextIdx = (n + slides.length) % slides.length;
+        if (nextIdx === prevIdx) return;
+
+        animating = true;
+        const outgoing = slides[prevIdx];
+        const incoming = slides[nextIdx];
+
+        // Posicionar incoming instantáneamente (sin transición)
+        incoming.style.transition = 'none';
+        incoming.style.transform  = dir > 0 ? 'translateX(100%)' : 'translateX(-100%)';
+        incoming.style.opacity    = '0';
+        incoming.offsetHeight;     // reflow forzado
+        incoming.style.transition = '';
+        incoming.style.transform  = '';
+        incoming.style.opacity    = '';
+
+        // Salida del slide actual
+        outgoing.classList.remove('is-active');
+        if (dir > 0) outgoing.classList.add('exit-left');
+        // dir < 0: sin exit-left → sale hacia la derecha por CSS default (translateX(100%))
+
+        // Entrada del nuevo slide
+        incoming.classList.add('is-active');
+
+        // Actualizar estado y dots
+        current = nextIdx;
+        dots[prevIdx].classList.remove('is-active');
         dots[current].classList.add('is-active');
+
+        // Limpiar clases tras la transición
+        setTimeout(() => {
+          outgoing.style.transition = 'none';
+          outgoing.classList.remove('exit-left');
+          outgoing.offsetHeight;
+          outgoing.style.transition = '';
+          animating = false;
+        }, 600);
       }
 
-      setInterval(() => goTo(current + 1), 5000);
+      function startAutoplay() {
+        clearInterval(timer);
+        timer = setInterval(() => goTo(current + 1, 1), 5000);
+      }
+
+      // Touch swipe
+      let touchStartX = 0;
+      el.addEventListener('touchstart', e => {
+        touchStartX = e.changedTouches[0].clientX;
+      }, { passive: true });
+
+      el.addEventListener('touchend', e => {
+        const dx = e.changedTouches[0].clientX - touchStartX;
+        if (Math.abs(dx) < 40) return;
+        const dir = dx < 0 ? 1 : -1;
+        goTo(current + dir, dir);
+        startAutoplay();
+      }, { passive: true });
+
+      startAutoplay();
     })();
   </script>
 
