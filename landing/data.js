@@ -1,0 +1,87 @@
+/* ============================================================
+   Datos · Zequeira 7054 — unidades, tipologías, precios
+   ============================================================ */
+const WA = '5491125466099';
+function waLink(txt){ return `https://wa.me/${WA}?text=${encodeURIComponent(txt)}`; }
+
+/* --- las 12 unidades a la venta (10 deptos + 2 dúplex) --- */
+const UNITS = [
+  {id:'6B', tipo:'Dúplex contrafrente', cat:'duplex', ori:'SE', amb:4, dorm:3, cub:'113,75', tot:'187,75', precio:'380.700', piso:'6°/7°/8°'},
+  {id:'6A', tipo:'Dúplex frente',       cat:'duplex', ori:'NW', amb:4, dorm:3, cub:'113,75', tot:'182,75', precio:'376.000', piso:'6°/7°/8°'},
+  {id:'4A', tipo:'3 amb frente',        cat:'frente', ori:'NW', amb:3, dorm:2, cub:'75,90', tot:'90,20',  precio:'232.500', piso:'4°'},
+  {id:'5A', tipo:'3 amb frente',        cat:'frente', ori:'NW', amb:3, dorm:2, cub:'75,90', tot:'90,20',  precio:'228.500', piso:'5°'},
+  {id:'1A', tipo:'3 amb frente + patio',cat:'frente', ori:'NW', amb:3, dorm:2, cub:'75,90', tot:'103,69', precio:'224.500', piso:'1°'},
+  {id:'3A', tipo:'3 amb frente',        cat:'frente', ori:'NW', amb:3, dorm:2, cub:'75,90', tot:'90,20',  precio:'224.500', piso:'3°'},
+  {id:'2A', tipo:'3 amb frente',        cat:'frente', ori:'NW', amb:3, dorm:2, cub:'75,90', tot:'90,20',  precio:'215.900', piso:'2°'},
+  {id:'5B', tipo:'3 amb contrafrente',  cat:'contra', ori:'SE', amb:3, dorm:2, cub:'75,90', tot:'80,06',  precio:'214.500', piso:'5°'},
+  {id:'4B', tipo:'3 amb contrafrente',  cat:'contra', ori:'SE', amb:3, dorm:2, cub:'75,90', tot:'80,06',  precio:'210.500', piso:'4°'},
+  {id:'1B', tipo:'3 amb contrafrente + patio', cat:'contra', ori:'SE', amb:3, dorm:2, cub:'75,90', tot:'93,55', precio:'203.500', piso:'1°'},
+  {id:'3B', tipo:'3 amb contrafrente',  cat:'contra', ori:'SE', amb:3, dorm:2, cub:'75,90', tot:'80,06',  precio:'202.800', piso:'3°'},
+  {id:'2B', tipo:'3 amb contrafrente',  cat:'contra', ori:'SE', amb:3, dorm:2, cub:'75,90', tot:'80,06',  precio:'194.950', piso:'2°'}
+];
+
+/* --- tipologías (tabs) --- */
+const TIPOS = [
+  {
+    key:'frente', tab:'3 Amb · Frente', ori:'NOROESTE',
+    title:'Semipiso 3 ambientes · Frente',
+    gallery:['assets/unidades/3_amb_frente/1f.webp','assets/unidades/3_amb_frente/2f.webp','assets/unidades/3_amb_frente/3f.webp','assets/unidades/3_amb_frente/4f.webp','assets/unidades/3_amb_frente/5f.webp','assets/unidades/3_amb_frente/6f.webp','assets/unidades/3_amb_frente/7.webp','assets/renders/living.webp','assets/renders/cocina01.webp'],
+    plano:'assets/planos/plano_2a7_piso.webp',
+    specs:[['M² cubiertos','75,90'],['M² balcón','14,30'],['M² totales','90,20',' a 103,69'],['Orientación','NW'],['Dormitorios','2'],['Baños','2']],
+    expensas:'$150.000', amb:'3 amb · 2 dorm · 2 baños',
+    note:'La unidad 1A suma un patio privado de 13,49 m² — 103,69 m² totales.',
+    precios:[
+      {u:'1A',m:'103,69',p:'224.500'},{u:'2A',m:'90,20',p:'215.900'},{u:'3A',m:'90,20',p:'224.500'},
+      {u:'4A',m:'90,20',p:'232.500'},{u:'5A',m:'90,20',p:'228.500'}
+    ],
+    desc:'Living comedor con salida a balcón de 14,30 m² orientado al NOROESTE — el sol de la tarde. Cocina con muebles a medida, horno eléctrico y anafe a gas. Dos dormitorios con placards completos. Solo 2 unidades por planta.'
+  },
+  {
+    key:'contra', tab:'3 Amb · Contrafrente', ori:'SUDESTE',
+    title:'Semipiso 3 ambientes · Contrafrente',
+    gallery:['assets/unidades/3_amb_contrafrente/1.webp','assets/unidades/3_amb_contrafrente/2.webp','assets/unidades/3_amb_contrafrente/3.webp','assets/unidades/3_amb_contrafrente/4.webp','assets/unidades/3_amb_contrafrente/5.webp','assets/unidades/3_amb_contrafrente/6.webp','assets/renders/dormitorio1.webp','assets/renders/baño1.webp','assets/renders/living3.webp'],
+    plano:'assets/planos/plano_2a7_piso.webp',
+    specs:[['M² cubiertos','75,90'],['M² balcón','4,16'],['M² totales','80,06',' a 93,55'],['Orientación','SE'],['Dormitorios','2'],['Baños','2']],
+    expensas:'$150.000', amb:'3 amb · 2 dorm · 2 baños',
+    note:'SUDESTE en Naón = luz de la mañana, sin edificios altos que tapen. La unidad 1B suma patio de 13,49 m² — 93,55 m² totales.',
+    precios:[
+      {u:'1B',m:'93,55',p:'203.500'},{u:'2B',m:'80,06',p:'194.950'},{u:'3B',m:'80,06',p:'202.800'},
+      {u:'4B',m:'80,06',p:'210.500'},{u:'5B',m:'80,06',p:'214.500'}
+    ],
+    desc:'Living comedor con salida a balcón orientado al SUDESTE — luz de mañana, silencio de contrafrente. Cocina con muebles a medida, horno eléctrico y anafe a gas. Dos dormitorios con placards completos. Solo 2 unidades por planta.'
+  },
+  {
+    key:'dxf', tab:'Dúplex · Frente', ori:'NOROESTE',
+    title:'Dúplex 4 ambientes · Frente — Unidad 6A',
+    gallery:['assets/unidades/duplex/7140485_92598101832057488829817061859868772140985517547153983871676650745823778867474.webp','assets/unidades/duplex/7140485_74558181431672631462300082397333460087465159064692586716430368669992208697760.webp','assets/unidades/duplex/7140485_77347361645425557922041452230550544660175567821264523405407664195597122593633.webp','assets/unidades/duplex/7140485_70293985448921348033305261254898026290848450340893787388714645376500353253910.webp','assets/renders/balcon_exterior1.webp','assets/renders/duplex_frente.webp','assets/renders/living4.webp','assets/renders/balcon_exterior3.webp'],
+    plano:'assets/planos/plano_azotea.webp',
+    specs:[['M² cubiertos','113,75'],['M² balcón','28,00'],['M² terraza','41,00'],['M² totales','182,75'],['Dormitorios','3'],['Baños','2']],
+    expensas:'$150.000', amb:'4 amb · 3 dorm · 2 baños · 3 niveles',
+    note:'Tres niveles: dormitorios en el 6°, vida social en el 7°, terraza privada de 41 m² en el 8°.',
+    precios:[{u:'6A',m:'182,75',p:'376.000'}],
+    desc:'Dúplex en la cima del edificio. Dormitorios en el 6°, living comedor apaisado en el 7° con balcón aterrazado de 28 m², y terraza privada de 41 m² en el 8° — de uso exclusivo. Uno de los dos únicos del edificio.'
+  },
+  {
+    key:'dxc', tab:'Dúplex · Contrafrente', ori:'SUDESTE',
+    title:'Dúplex 4 ambientes · Contrafrente — Unidad 6B',
+    gallery:['assets/unidades/duplex/7140485_58166711416942987489841188020290025272478350907857724988576721523546924671540.webp','assets/unidades/duplex/7140485_109483828632792212237262489262260395358498856006680503704735969774019458253110.webp','assets/unidades/duplex/7140485_102589815381142993905810466228540614675553547629003827418414670479177366053630.webp','assets/unidades/duplex/7140485_20846707556513837181653945219494663002556759192731893224397389042130596892252.webp','assets/renders/balcon_exterior1.webp','assets/renders/duplex_frente.webp','assets/renders/living4.webp','assets/renders/balcon_exterior3.webp'],
+    plano:'assets/planos/plano_azotea.webp',
+    specs:[['M² cubiertos','113,75'],['M² balcón','28,00'],['M² terraza','46,00'],['M² totales','187,75'],['Dormitorios','3'],['Baños','2']],
+    expensas:'$150.000', amb:'4 amb · 3 dorm · 2 baños · 3 niveles',
+    note:'Suite principal con vestidor y baño privado. Terraza rooftop de 46 m² — la más grande del edificio.',
+    precios:[{u:'6B',m:'187,75',p:'380.700'}],
+    desc:'El dúplex más grande. Suite principal con vestidor y baño privado en el 6°, living social apaisado en el 7° con balcón aterrazado de 28 m², y rooftop privado de 46 m² en el 8°. El otro de los dos únicos.'
+  },
+  {
+    key:'coch', tab:'Cocheras', ori:'SUBSUELO + PB',
+    title:'Cocheras',
+    gallery:['assets/planos/plano_subsuelo.webp','assets/planos/plano_planca_baja.webp'],
+    plano:'assets/planos/plano_subsuelo.webp',
+    specs:[['Total','7'],['Subsuelo','4'],['Planta baja','3'],['Precio c/u','USD 20.000']],
+    expensas:'—', amb:'Venta independiente',
+    note:'Las cocheras se venden por separado — no están incluidas en el precio de ningún departamento.',
+    precios:[{u:'Subsuelo',m:'4 disp.',p:'20.000'},{u:'Planta baja',m:'3 disp.',p:'20.000'}],
+    desc:'En Naón siempre hay lugar en la calle — la cochera es una elección, no una necesidad. 7 disponibles: 4 en subsuelo con acceso vehicular independiente y 3 en planta baja con acceso directo desde la calle.',
+    isCochera:true
+  }
+];
