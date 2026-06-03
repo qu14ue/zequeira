@@ -185,6 +185,15 @@ h1, h2, h3, h4 {
   }
 }
 
+@media (min-width: 1920px) {
+  .display     { font-size: 96px; }
+  .h1          { font-size: 80px; }
+  .h2          { font-size: 72px; }
+  .h3          { font-size: 38px; }
+  .lede        { font-size: 22px; }
+  .manifesto p { font-size: 48px; }
+}
+
 /* H1 de secciones */
 .h1 {
   font-family: var(--f-serif);
@@ -209,6 +218,12 @@ h1, h2, h3, h4 {
   letter-spacing: -0.025em;
 }
 
+@media (min-width: 768px) {
+  .h2 {
+    font-size: clamp(36px, 4.5vw, 60px);
+  }
+}
+
 /* H3 */
 .h3 {
   font-family: var(--f-serif);
@@ -216,6 +231,12 @@ h1, h2, h3, h4 {
   font-weight: 500;
   line-height: 1.15;
   letter-spacing: -0.015em;
+}
+
+@media (min-width: 768px) {
+  .h3 {
+    font-size: clamp(22px, 2.8vw, 32px);
+  }
 }
 
 /* Texto grande de apoyo */
@@ -290,6 +311,23 @@ h1, h2, h3, h4 {
 @media (min-width: 1024px) {
   .section {
     padding-block: 160px;
+  }
+}
+
+/* Sección compacta — para secciones contiguas del mismo fondo */
+.section--compact {
+  padding-block: 40px;
+}
+
+@media (min-width: 768px) {
+  .section--compact {
+    padding-block: 56px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .section--compact {
+    padding-block: 72px;
   }
 }
 
@@ -705,9 +743,15 @@ h1, h2, h3, h4 {
   font-style: normal;
   font-size: clamp(14px, 1.4vw, 17px);
   font-weight: 300;
-  line-height: 1.6;
+  line-height: 1.65;
   color: rgba(255, 255, 255, 0.88);
   max-width: 46ch;
+}
+
+@media (min-width: 768px) {
+  .hero__sub {
+    font-size: clamp(15px, 2vw, 17px);
+  }
 }
 
 .hero__aside {
@@ -871,7 +915,7 @@ h1, h2, h3, h4 {
   font-family: var(--f-serif);
   font-size: clamp(22px, 2.6vw, 40px);
   font-weight: 400;
-  line-height: 1.38;
+  line-height: 1.65;
   letter-spacing: -0.005em;
 }
 
@@ -1100,6 +1144,12 @@ h1, h2, h3, h4 {
 
 .band__body h2 {
   max-width: 14ch;
+}
+
+@media (min-width: 1440px) {
+  .band__body h2 {
+    max-width: 20ch;
+  }
 }
 
 .band__body p {
@@ -1686,7 +1736,7 @@ h1, h2, h3, h4 {
   font-family: var(--f-serif);
   font-size: 20px;
   font-weight: 500;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.015em;
   color: var(--white);
 }
 
@@ -1824,6 +1874,17 @@ h1, h2, h3, h4 {
   font-size: 14px;
 }
 
+@media (max-width: 374px) {
+  .cond__opt {
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .cond__opt .big {
+    font-size: 24px;
+  }
+}
+
 .coch {
   display: flex;
   gap: 20px;
@@ -1873,6 +1934,7 @@ h1, h2, h3, h4 {
   font-family: var(--f-serif);
   font-size: clamp(18px, 2vw, 24px);
   font-weight: 400;
+  line-height: 1.3;
   letter-spacing: -0.01em;
   color: var(--ink);
 }
@@ -1922,7 +1984,7 @@ h1, h2, h3, h4 {
 .faq__a p {
   padding: 0 44px 28px 0;
   font-size: 16px;
-  line-height: 1.7;
+  line-height: 1.65;
   color: var(--ink-soft);
 }
 
@@ -1983,11 +2045,11 @@ h1, h2, h3, h4 {
 }
 
 .asesor__quote {
-  margin: 0 0 24px;
+  margin: 20px 0 24px;
   font-family: var(--f-serif);
   font-size: clamp(22px, 2.8vw, 36px);
   font-weight: 400;
-  line-height: 1.22;
+  line-height: 1.25;
   letter-spacing: -0.015em;
 }
 
@@ -1998,8 +2060,9 @@ h1, h2, h3, h4 {
 .asesor__name {
   font-family: var(--f-serif);
   font-size: 26px;
+  font-weight: 500;
   color: var(--white);
-  margin-bottom: 4px;
+  margin-bottom: 10px;
 }
 
 .asesor .mat {
@@ -2530,6 +2593,10 @@ h1, h2, h3, h4 {
 
   .band {
     grid-template-columns: 1fr;
+  }
+
+  .band__body h2 {
+    max-width: none;
   }
 
   .band--rev .band__media,
