@@ -33,16 +33,16 @@
         <div class="ficha">
           <div class="ficha__ori">${t.ori}</div>
           <h3 class="h3">${t.title}</h3>
-          <div class="chip-row" style="margin-top:14px"><span class="chip">${t.amb}</span>${t.isCochera?'':`<span class="chip">Expensas ${t.expensas}</span>`}</div>
+          <div class="chip-row" style="margin-top:14px"><span class="chip">${t.amb}</span>${t.isCochera?'':`<span class="chip">Baulera en PB: Incluida</span>`}</div>
           <p class="muted" style="margin-top:18px;font-size:15.5px">${t.desc}</p>
           <div class="specs">${specs}</div>
-          <div class="priceTable">
+          <div class="priceTable" style="display:none">
             <div class="pt-h"><span>${t.isCochera?'Ubicación':'Unidad'}</span><span>${t.isCochera?'Disponibles':'M² totales'}</span><span style="text-align:right">Precio</span></div>
             ${priceRows}
           </div>
           ${t.note?`<div class="ficha__note">${t.note}</div>`:''}
           <div class="btn-row">
-            <a class="btn btn-primary" href="${waLink(waTxt)}" target="_blank" rel="noopener" data-gtm="contact_whatsapp">${t.isCochera?'Consultar disponibilidad':'Consultar por esta tipología'}</a>
+            <a class="btn btn-primary" href="${waLink(waTxt)}" target="_blank" rel="noopener" data-gtm="contact_whatsapp">${t.isCochera?'Consultar disponibilidad':'Coordinar Visita'}</a>
             <button class="btn btn-ghost" data-plano="${t.plano}" data-planotitle="Plano · ${t.title}">Ver plano</button>
           </div>
         </div>
@@ -86,9 +86,11 @@
      ============================================================ */
   const tbody = document.getElementById('uTableBody');
   if(tbody){
+    const NO_DISPONIBLE = ['3A','3B','4B','6B'];
     function render(filter){
       const rows = UNITS.filter(u=> filter==='all' || u.cat===filter || (filter==='duplex'&&u.cat==='duplex'));
       tbody.innerHTML = rows.map(u=>{
+        const off = NO_DISPONIBLE.includes(u.id);
         const waTxt = `Hola AKPROP, me interesa la unidad ${u.id} (${u.tipo}) de Zequeira 7054 — USD ${u.precio}. Quisiera coordinar una visita.`;
         return `<tr class="${u.cat==='duplex'?'dx':''}">
           <td data-l="Unidad"><span class="u-id">${u.id}</span></td>
@@ -97,8 +99,7 @@
           <td data-l="Piso" class="hide-sm">${u.piso}</td>
           <td data-l="M² tot.">${u.tot}</td>
           <td data-l="Precio" class="r"><span class="u-price">USD ${u.precio}</span></td>
-          <td data-l="Estado" class="r"><span class="u-state"><span class="d"></span>Disponible</span></td>
-          <td data-l="" class="r"><a class="u-cta" href="${waLink(waTxt)}" target="_blank" rel="noopener" data-gtm="contact_whatsapp">Consultar →</a></td>
+          <td data-l="Estado" class="r"><span class="u-state${off?' u-state--off':''}"><span class="d"></span>${off?'No disponible':'Disponible'}</span></td>
         </tr>`;
       }).join('');
     }
