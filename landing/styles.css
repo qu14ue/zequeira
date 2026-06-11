@@ -1199,18 +1199,26 @@ h1, h2, h3, h4 {
 
 /* --- 08d. Tipologías (tabs dinámicos) --- */
 
-.tipos__tabs {
+.tipos__tabswrap {
   position: sticky;
   top: var(--nav-h);
   z-index: 30;
-  display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
   margin-bottom: 36px;
-  padding: 10px 0;
   background: rgba(250, 248, 245, 0.95);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
+}
+
+.tipos__tabs {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  padding: 10px 0;
+}
+
+/* Chevron "ver más tipologías" — oculto en desktop, visible solo en mobile con overflow */
+.tipos__tabsmore {
+  display: none;
 }
 
 .ttab {
@@ -2927,6 +2935,69 @@ h1, h2, h3, h4 {
 
   .tipos__tabs::-webkit-scrollbar {
     display: none;               /* Chrome / Safari */
+  }
+
+  /* Peek: chips más compactos para que asome el siguiente tab */
+  .tipos__tabswrap.has-overflow .tipos__tabs {
+    padding-right: 40px;         /* espacio bajo el chevron */
+  }
+
+  .ttab {
+    padding: 10px 15px;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+  }
+
+  /* Chevron tappable + degradado derecho (señal de "hay más, deslizá") */
+  .tipos__tabsmore {
+    display: none;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 4px;
+    width: 52px;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 6px;
+    border: 0;
+    margin: 0;
+    cursor: pointer;
+    color: var(--ink);
+    font-size: 24px;
+    line-height: 1;
+    z-index: 2;
+    background: linear-gradient(to right, rgba(250, 248, 245, 0) 0%, rgba(250, 248, 245, 0.96) 55%);
+    -webkit-tap-highlight-color: transparent;
+    transition: opacity 0.2s;
+  }
+
+  .tipos__tabswrap.has-overflow .tipos__tabsmore {
+    display: flex;
+  }
+
+  /* Al llegar al final, ocultar chevron/degradado derecho */
+  .tipos__tabswrap.is-end .tipos__tabsmore {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* Degradado izquierdo cuando ya se scrolleó (refuerza dirección) */
+  .tipos__tabswrap::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 4px;
+    left: 0;
+    width: 30px;
+    z-index: 2;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s;
+    background: linear-gradient(to left, rgba(250, 248, 245, 0) 0%, rgba(250, 248, 245, 0.96) 60%);
+  }
+
+  .tipos__tabswrap.is-scrolled::before {
+    opacity: 1;
   }
 
   /* CTAs hero full-width */
