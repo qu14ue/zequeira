@@ -9,7 +9,7 @@
 
 const TOKKO_DEVELOPMENT_ID = 64745; // emprendimiento Zequeira 7054 (akprop.com.ar/d/64745)
 const TOKKO_ENDPOINT       = 'https://www.tokkobroker.com/api/v1/webcontact/';
-const ALLOWED_ORIGIN       = 'https://zequeira7054.akprop.com.ar';
+const ALLOWED_ORIGIN       = 'https://zequeira.akprop.com.ar';
 
 function corsHeaders(origin) {
   // Permite el dominio de producción y cualquier preview *.pages.dev del proyecto
