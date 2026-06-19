@@ -1,0 +1,104 @@
+/**
+ * POST /api/lead
+ * Recibe los datos del formulario de contacto, valida, y reenvía a Tokko CRM.
+ * La API key vive en env vars de CF Pages (TOKKO_API_KEY) — nunca en el browser.
+ *
+ * Env vars requeridas en CF Pages → Settings → Environment variables:
+ *   TOKKO_API_KEY  →  la API key de Tokko (misma cuenta AKPROP que Larrazabal)
+ */
+
+const TOKKO_DEVELOPMENT_ID = 64745; // emprendimiento Zequeira 7054 (akprop.com.ar/d/64745)
+const TOKKO_ENDPOINT       = 'https://www.tokkobroker.com/api/v1/webcontact/';
+const ALLOWED_ORIGIN       = 'https://zequeira7054.akprop.com.ar';
+
+function corsHeaders(origin) {
+  // Permite el dominio de producción y cualquier preview *.pages.dev del proyecto
+  const allowed = origin === ALLOWED_ORIGIN || /^https:\/\/[a-z0-9-]+\.pages\.dev$/.test(origin);
+  return {
+    'Access-Control-Allow-Origin':  allowed ? origin : ALLOWED_ORIGIN,
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type',
+    'Content-Type': 'application/json',
+  };
+}
+
+// OPTIONS preflight
+export async function onRequestOptions({ request }) {
+  return new Response(null, {
+    status: 204,
+    headers: corsHeaders(request.headers.get('origin') || ''),
+  });
+}
+
+// POST handler
+export async function onRequestPost({ request, env }) {
+  const origin  = request.headers.get('origin') || '';
+  const headers = corsHeaders(origin);
+
+  // 1. Parsear body
+  let body;
+  try {
+    body = await request.json();
+  } catch {
+    return json({ ok: false, error: 'invalid_body' }, 400, headers);
+  }
+
+  const nombre    = (body.nombre    || '').trim();
+  const email     = (body.email     || '').trim();
+  const telefono  = (body.telefono  || '').trim();
+  const tipologia = (body.tipologia || '').trim();
+  const mensaje   = (body.mensaje   || '').trim();
+
+  // 2. Validación básica
+  if (!nombre || !email || !telefono) {
+    return json({ ok: false, error: 'missing_fields' }, 400, headers);
+  }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return json({ ok: false, error: 'invalid_email' }, 400, headers);
+  }
+
+  // 3. Armar mensaje para Tokko
+  let text = `Consulta desde landing Zequeira 7054 (Barrio Naón). Teléfono/WhatsApp: ${telefono}.`;
+  if (tipologia) text += ` Tipología de interés: ${tipologia}.`;
+  if (mensaje)   text += ` Mensaje: ${mensaje}`;
+
+  const payload = {
+    name:        nombre,
+    email:       email,
+    phone:       telefono,
+    text:        text,
+    development: `/api/v1/development/${TOKKO_DEVELOPMENT_ID}/`,
+    tags:        ['landing-zequeira'],
+  };
+
+  // 4. Enviar a Tokko
+  const apiKey = env.TOKKO_API_KEY;
+  if (!apiKey) {
+    console.error('TOKKO_API_KEY no configurada');
+    return json({ ok: false, error: 'server_config_error' }, 500, headers);
+  }
+
+  let tokkoRes;
+  try {
+    tokkoRes = await fetch(`${TOKKO_ENDPOINT}?key=${apiKey}`, {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify(payload),
+    });
+  } catch (err) {
+    console.error('Error de red al llamar Tokko:', err);
+    return json({ ok: false, error: 'network_error' }, 502, headers);
+  }
+
+  if (!tokkoRes.ok) {
+    const detail = await tokkoRes.text().catch(() => '');
+    console.error(`Tokko respondió ${tokkoRes.status}:`, detail);
+    return json({ ok: false, error: 'tokko_error', status: tokkoRes.status }, 502, headers);
+  }
+
+  return json({ ok: true }, 200, headers);
+}
+
+function json(data, status, headers) {
+  return new Response(JSON.stringify(data), { status, headers });
+}

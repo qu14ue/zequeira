@@ -130,10 +130,10 @@ window.openVideo = function(id){
   document.addEventListener('keydown', e=>{ if(e.key==='Escape') close(); });
 })();
 
-/* ---- form validation + mock submit ---- */
+/* ---- form validation + submit a Tokko (vía CF Function /api/lead) ---- */
 const form = document.getElementById('leadForm');
 if(form){
-  form.addEventListener('submit', e=>{
+  form.addEventListener('submit', async e=>{
     e.preventDefault();
     let ok = true;
     form.querySelectorAll('[required]').forEach(f=>{
@@ -145,9 +145,35 @@ if(form){
       if(!valid) ok=false;
     });
     if(!ok) return;
+
+    // Loading state
+    const btn = form.querySelector('button[type="submit"]');
+    if(btn){ btn.disabled = true; btn.style.opacity = '0.6'; }
+
+    // Enviar a Tokko vía CF Function
+    const payload = {
+      nombre:    form.nombre.value.trim(),
+      email:     form.email.value.trim(),
+      telefono:  form.telefono.value.trim(),
+      tipologia: form.tipologia ? form.tipologia.value.trim() : '',
+      mensaje:   form.mensaje ? form.mensaje.value.trim() : '',
+    };
+    try{
+      await fetch('/api/lead', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify(payload),
+      });
+    }catch(_){ /* silencioso: igual mostramos confirmación */ }
+
     form.classList.add('sent');
     document.getElementById('formSuccess').classList.add('show');
-    window.__gtm('generate_lead', {emprendimiento:'EMPZEQUEIRA7054'});
+    window.__gtm('generate_lead', {
+      emprendimiento: 'EMPZEQUEIRA7054',
+      captured_name:  payload.nombre,
+      captured_email: payload.email,
+      captured_phone: payload.telefono,
+    });
   });
   form.querySelectorAll('input,select,textarea').forEach(f=>{
     f.addEventListener('input', ()=> f.closest('.field').classList.remove('err'));
